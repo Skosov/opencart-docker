@@ -1,4 +1,8 @@
 *.log
-.cache/
 .idea/
 config.php
+/opencart/storage/cache/
+/opencart/public_html/system/storage/modification/
+/opencart/storage/modification/
+/opencart/public_html/system/storage/cache/
+/opencart/public_html/image/cache/
