@@ -2,3 +2,4 @@
 */cache/*
 .idea
 opencart/public_html.system/cache/*
+config.php
