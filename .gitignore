@@ -1,5 +1,4 @@
 *.log
-*/cache/*
-.idea
-opencart/public_html.system/cache/*
+.cache/
+.idea/
 config.php
