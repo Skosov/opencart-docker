@@ -7,3 +7,4 @@ config.php
 /opencart/public_html/system/storage/cache/
 /opencart/public_html/image/cache/
 /opencart/storage/upload/
+/opencart/storage/logs/
