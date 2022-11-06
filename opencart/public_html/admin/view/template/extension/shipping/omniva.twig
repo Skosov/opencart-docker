@@ -1,0 +1,320 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+       <!-- <a href="{{ clear_cache }}" data-toggle="tooltip" title="{{ button_clear_cache }}" class="btn btn-default"><i class="fa fa-trash-o"></i></a> -->
+        <button type="submit" form="form-omniva" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+	{% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+      </div>
+      <div class="panel-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-omniva" class="form-horizontal">
+          <div class="row">
+            <div class="col-sm-2">
+              <ul class="nav nav-pills nav-stacked">
+                <li class="active"><a href="#tab-general" data-toggle="tab">{{ tab_general }}</a></li>
+				{% for tab_zone in tab_zones %}
+                <li><a href="#tab-shipping-{{ tab_zone.code }}" data-toggle="tab">{{ tab_zone.title }}</a></li>
+				{% endfor %}
+              </ul>
+            </div>
+            <div class="col-sm-10">
+              <div class="tab-content">
+                <div class="tab-pane active" id="tab-general">
+				  <div class="form-group">
+					<label class="col-sm-2 control-label">{{ text_module_version }} {{ SHIPPING_OMNIVA_VERSION }}</label>
+				  </div>
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-api_url">{{ entry_api_url }}</label>
+                    <div class="col-sm-10">
+                      <input type="text" name="shipping_omniva_api_url" value="{{ shipping_omniva_api_url }}" placeholder="{{ entry_api_url }}" id="input-api_url" class="form-control" />
+                    </div>
+                  </div>
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-username">{{ entry_username }}</label>
+                    <div class="col-sm-10">
+                      <input type="text" name="shipping_omniva_username" value="{{ shipping_omniva_username }}" placeholder="{{ entry_username }}" id="input-username" class="form-control" />
+                    </div>
+                  </div>
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-password">{{ entry_password }}</label>
+                    <div class="col-sm-10">
+                      <input type="password" name="shipping_omniva_password" value="{{ shipping_omniva_password }}" placeholder="{{ entry_password }}" id="input-password" class="form-control" />
+                    </div>
+                  </div>				  
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-services">{{ entry_services }}</label>
+                    <div class="col-sm-10">
+                      <div class="checkbox">
+                        <label>
+						  {% if shipping_omniva_services_parcel_terminal %}
+                            <input type="checkbox" name="shipping_omniva_services_parcel_terminal" value="1" checked="checked" />
+                            {{ entry_services_parcel_terminal }}
+                          {% else %}
+                            <input type="checkbox" name="shipping_omniva_services_parcel_terminal" value="1" />
+                            {{ entry_services_parcel_terminal }}
+                          {% endif %}
+						</label><br />
+                        <label>
+						  {% if shipping_omniva_services_courier %}
+                            <input type="checkbox" name="shipping_omniva_services_courier" value="1" checked="checked" />
+                            {{ entry_services_courier }}
+                          {% else %}
+                            <input type="checkbox" name="shipping_omniva_services_courier" value="1" />
+                            {{ entry_services_courier }}
+                          {% endif %}
+						</label>
+                    </div>
+                    </div>
+                  </div>
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-label_type">{{ entry_label_type }}</label>
+                    <div class="col-sm-10">
+                      <select name="shipping_omniva_label_type" id="input-label_type" class="form-control">
+					  {% if shipping_omniva_label_type == '1' %}
+							<option value="1" selected="selected">{{ text_label_a4 }}</option>
+					  {% else %}
+							<option value="1">{{ text_label_a4 }}</option>
+					  {% endif %}
+					  {% if shipping_omniva_label_type == '2' %}
+							<option value="2" selected="selected">{{ text_label_single }}</option>
+					  {% else %}
+							<option value="2">{{ text_label_single }}</option>
+					  {% endif %}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-sender_name">{{ entry_sender_name }}</label>
+                    <div class="col-sm-10">
+                      <input type="text" name="shipping_omniva_sender_name" value="{{ shipping_omniva_sender_name }}" placeholder="{{ entry_sender_name }}" id="input-sender_name" class="form-control" />
+                    </div>
+                  </div>
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-sender_address">{{ entry_sender_address }}</label>
+                    <div class="col-sm-10">
+                      <input type="text" name="shipping_omniva_sender_address" value="{{ shipping_omniva_sender_address }}" placeholder="{{ entry_sender_address }}" id="input-sender_address" class="form-control" />
+                    </div>
+                  </div>
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-sender_postcode">{{ entry_sender_postcode }}</label>
+                    <div class="col-sm-10">
+                      <input type="text" name="shipping_omniva_sender_postcode" value="{{ shipping_omniva_sender_postcode }}" placeholder="{{ entry_sender_postcode }}" id="input-sender_postcode" class="form-control" />
+                    </div>
+                  </div>
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-sender_city">{{ entry_sender_city }}</label>
+                    <div class="col-sm-10">
+                      <input type="text" name="shipping_omniva_sender_city" value="{{ shipping_omniva_sender_city }}" placeholder="{{ entry_sender_city }}" id="input-sender_city" class="form-control" />
+                    </div>
+                  </div>
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-sender_country_code">{{ entry_sender_country_code }}</label>
+                    <div class="col-sm-10">
+                      <select name="shipping_omniva_sender_country_code" id="input-sender_country_code" class="form-control">
+					  {% if shipping_omniva_sender_country_code == 'EE' %}
+							<option value="EE" selected="selected">{{ text_estonia }}</option>
+					  {% else %}
+							<option value="EE">{{ text_estonia }}</option>
+					  {% endif %}
+					  {% if shipping_omniva_sender_country_code == 'LV' %}
+							<option value="LV" selected="selected">{{ text_latvia }}</option>
+					  {% else %}
+							<option value="LV">{{ text_latvia }}</option>
+					  {% endif %}
+					  {% if shipping_omniva_sender_country_code == 'LT' %}
+							<option value="LT" selected="selected">{{ text_lithuania }}</option>
+					  {% else %}
+							<option value="LT">{{ text_lithuania }}</option>
+					  {% endif %}
+                      </select>
+                    </div>
+                  </div>				  
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-sender_phone">{{ entry_sender_phone }}</label>
+                    <div class="col-sm-10">
+                      <input type="text" name="shipping_omniva_sender_phone" value="{{ shipping_omniva_sender_phone }}" placeholder="{{ entry_sender_phone }}" id="input-sender_phone" class="form-control" />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-cod_status">{{ entry_cod_status }}</label>
+                    <div class="col-sm-10">
+                      <select name="shipping_omniva_cod_status" id="input-cod_status" class="form-control">
+						{% if shipping_omniva_cod_status %}
+                        <option value="1" selected="selected">{{ text_enabled }}</option>
+                        <option value="0">{{ text_disabled }}</option>
+                        {% else %}
+                        <option value="1">{{ text_enabled }}</option>
+                        <option value="0" selected="selected">{{ text_disabled }}</option>
+                        {% endif %}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-company">{{ entry_company }}</label>
+                    <div class="col-sm-10">
+                      <input type="text" name="shipping_omniva_company" value="{{ shipping_omniva_company }}" placeholder="{{ entry_company }}" id="input-company" class="form-control" />
+                    </div>
+                  </div>
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-bank">{{ entry_bank }}</label>
+                    <div class="col-sm-10">
+                      <input type="text" name="shipping_omniva_bank" value="{{ shipping_omniva_bank }}" placeholder="{{ entry_bank }}" id="input-bank" class="form-control" />
+                    </div>
+                  </div>
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="{{ help_dimension }}">{{ entry_dimension }}</span></label>
+                    <div class="col-sm-10">
+                      <input type="text" name="shipping_omniva_length" value="{{ shipping_omniva_length }}" id="input-omniva-length" class="form-control" style="width: 50px; display: inline;" /> <input type="text" name="shipping_omniva_width" value="{{ shipping_omniva_width }}" id="input-omniva-width" class="form-control" style="width: 50px; display: inline;" /> <input type="text" name="shipping_omniva_height" value="{{ shipping_omniva_height }}" id="input-omniva-height" class="form-control" style="width: 50px; display: inline;" />&nbsp;&nbsp;<font style="color:#FF0000;font-size:14px">({{ default_length_class }})</font>
+			  {% if error_shipping_omniva_length %}
+              <span class="error text-danger">{{ error_shipping_omniva_length }}</span>
+              {% endif %}
+			  {% if error_shipping_omniva_width %}
+              <span class="error text-danger">{{ error_shipping_omniva_width }}</span>
+              {% endif %}
+			  {% if error_shipping_omniva_height %}
+              <span class="error text-danger">{{ error_shipping_omniva_height }}</span>
+              {% endif %}
+                    </div>
+                  </div>
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-weight"><span data-toggle="tooltip" title="{{ help_weight }}">{{ entry_weight }}</span></label>
+                    <div class="col-sm-10">
+                      <input type="text" name="shipping_omniva_weight" value="{{ shipping_omniva_weight }}" id="input-weight" class="form-control" style="width: 50px; display: inline;" />&nbsp;&nbsp;<font style="color:#FF0000;font-size:14px">({{ default_weight_class }})</font>
+			  {% if error_shipping_omniva_weight %}
+              <span class="error text-danger">{{ error_shipping_omniva_weight }}</span>
+			  {% endif %}
+                    </div>
+                  </div>
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" for="input-import-url">{{ entry_import_url }}</label>
+                    <div class="col-sm-10">
+                      <input type="text" name="shipping_omniva_import_url" value="{{ shipping_omniva_import_url }}" placeholder="{{ entry_import_url }}" id="input-import-url" class="form-control" />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
+                    <div class="col-sm-10">
+                      <select name="shipping_omniva_status" id="input-status" class="form-control">
+						{% if shipping_omniva_status %}
+                        <option value="1" selected="selected">{{ text_enabled }}</option>
+                        <option value="0">{{ text_disabled }}</option>
+                        {% else %}
+                        <option value="1">{{ text_enabled }}</option>
+                        <option value="0" selected="selected">{{ text_disabled }}</option>
+                        {% endif %}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-sort-order">{{ entry_sort_order }}</label>
+                    <div class="col-sm-10">
+                      <input type="text" name="shipping_omniva_sort_order" value="{{ shipping_omniva_sort_order }}" placeholder="{{ entry_sort_order }}" id="input-sort-order" class="form-control" />
+                    </div>
+                  </div>
+				  
+                </div>
+				{% for tab_zone in tab_zones %}
+                <div class="tab-pane" id="tab-shipping-{{ tab_zone.code }}">
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-geo_zone_id-{{ tab_zone.code }}">{{ entry_geo_zone }}</label>
+                    <div class="col-sm-10">
+                      <select name="shipping_omniva_{{ tab_zone.code }}_geo_zone_id" id="input-geo_zone_id-{{ tab_zone.code }}" class="form-control">
+				  <option value="0">{{ text_select_zone }}</option>
+				  {% for geo_zone in geo_zones %}
+					  {% if geo_zone.geo_zone_id == attribute(_context, 'shipping_omniva_' ~ tab_zone.code ~ '_geo_zone_id') %}
+							<option value="{{ geo_zone.geo_zone_id }}" selected="selected">{{ geo_zone.name }}</option>
+					  {% else %}
+							<option value="{{ geo_zone.geo_zone_id }}">{{ geo_zone.name }}</option>
+					  {% endif %}
+				  {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-tax_class_id-{{ tab_zone.code }}">{{ entry_tax_class }}</label>
+                    <div class="col-sm-10">
+                      <select name="shipping_omniva_{{ tab_zone.code }}_tax_class_id" id="input-tax_class_id-{{ tab_zone.code }}" class="form-control">
+                    <option value="0">{{ text_none }}</option>
+					{% for tax_class in tax_classes %}
+						{% if tax_class.tax_class_id == attribute(_context, 'shipping_omniva_' ~ tab_zone.code ~ '_tax_class_id') %}
+							<option value="{{ tax_class.tax_class_id }}" selected="selected">{{ tax_class.title }}</option>
+						{% else %}
+							<option value="{{ tax_class.tax_class_id }}">{{ tax_class.title }}</option>
+						{% endif %}
+                    {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-cost-{{ tab_zone.code }}"><span data-toggle="tooltip" title="{{ help_rate }}">{{ entry_cost }}</span></label>
+                    <div class="col-sm-10">				
+                      <textarea name="shipping_omniva_{{ tab_zone.code }}_cost" rows="5" placeholder="{{ entry_cost }}" id="input-cost-{{ tab_zone.code }}" class="form-control">{{ attribute(_context, 'shipping_omniva_'~tab_zone.code~ '_cost') }}</textarea>
+			  {% if attribute(_context, 'error_shipping_omniva_'~tab_zone.code~ '_cost') %}
+              <span class="error text-danger">{{ attribute(_context, 'error_shipping_omniva_'~tab_zone.code~ '_cost') }}</span>
+			  {% endif %}
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-free-{{ tab_zone.code }}"><span data-toggle="tooltip" title="{{ help_free }}">{{ entry_free }}</span></label>					
+                    <div class="col-sm-10">				
+					  <input type="text" name="shipping_omniva_{{ tab_zone.code }}_free" value="{{ attribute(_context, 'shipping_omniva_'~tab_zone.code~ '_free') }}" id="input-free-{{ tab_zone.code }}" class="form-control" />
+                    </div>
+                  </div>				  
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-courier-cost-{{ tab_zone.code }}"><span data-toggle="tooltip" title="{{ help_rate }}">{{ entry_cost_courier }}</span></label>
+                    <div class="col-sm-10">				
+                      <textarea name="shipping_omniva_{{ tab_zone.code }}_courier_cost" rows="5" placeholder="{{ entry_cost_courier }}" id="input-courier-cost-{{ tab_zone.code }}" class="form-control">{{ attribute(_context, 'shipping_omniva_'~tab_zone.code~ '_courier_cost') }}</textarea>
+			  {% if attribute(_context, 'error_shipping_omniva_'~tab_zone.code~ '_courier_cost') %}
+              <span class="error text-danger">{{ attribute(_context, 'error_shipping_omniva_'~tab_zone.code~ '_courier_cost') }}</span>
+			  {% endif %}
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-courier-free-{{ tab_zone.code }}"><span data-toggle="tooltip" title="{{ help_free }}">{{ entry_free_courier }}</span></label>					
+                    <div class="col-sm-10">				
+					  <input type="text" name="shipping_omniva_{{ tab_zone.code }}_courier_free" value="{{ attribute(_context, 'shipping_omniva_'~tab_zone.code~ '_courier_free') }}" id="input-courier-free-{{ tab_zone.code }}" class="form-control" />
+                    </div>
+                  </div>				  
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-status{{ tab_zone.code }}">{{ entry_status }}</label>
+                    <div class="col-sm-10">
+                      <select name="shipping_omniva_{{ tab_zone.code }}_status" id="input-status{{ tab_zone.code }}" class="form-control">
+						{% if attribute(_context, 'shipping_omniva_' ~ tab_zone.code ~ '_status') %}
+							<option value="1" selected="selected">{{ text_enabled }}</option>
+							<option value="0">{{ text_disabled }}</option>
+                        {% else %}
+							<option value="1">{{ text_enabled }}</option>
+							<option value="0" selected="selected">{{ text_disabled }}</option>
+                        {% endif %}
+                      </select>
+                    </div>
+                  </div>				
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }} 

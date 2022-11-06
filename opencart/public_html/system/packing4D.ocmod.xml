@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+  <name>packing4D</name>
+  <code>packing4D</code>
+  <version>1</version>
+  <author>s_kosoff</author>
+  <link>t.me/s_kosoff</link>
+  
+    <file path="catalog/model/extension/shipping/omniva.php">
+    <operation>
+      <search><![CDATA['code'       => 'omniva',]]></search>
+      <add position="before" offset="1"><![CDATA[
+      if (isset($total_cost)) {
+        $this->load->model('extension/module/packing4D');
+        $boxes = $this->model_extension_module_packing4D->getBoxes('omniva');
+        if ($boxes) {
+            $pricePacking = $boxes['price'];
+            if ($pricePacking) $total_cost += $pricePacking;
+        }
+      }
+      ]]></add>
+    </operation>
+    </file>
+    
+    
+    <file path="catalog/model/checkout/order.php">
+    <operation>
+      <search><![CDATA[$order_id = $this->db->getLastId();]]></search>
+      <add position="after"><![CDATA[
+        $this->load->model('extension/module/packing4D');
+        $this->model_extension_module_packing4D->addPackedOrder($order_id);
+      ]]></add>
+    </operation>
+    </file>
+  
+  
+  <file path="catalog/model/journal3/checkout.php">
+    <operation>
+      <search><![CDATA[$results = $this->model_setting_extension->getExtensions('shipping');]]></search>
+      <add position="after"><![CDATA[
+        $this->load->model('extension/module/packing4D');
+        $boxes = $this->model_extension_module_packing4D->getBoxes();
+        if ($boxes) {
+            $pricePacking = $boxes['price'];
+        }
+      ]]></add>
+    </operation>
+  </file>
+  
+    <file path="catalog/model/journal3/order.php">
+        <operation>
+          <search><![CDATA[$this->session->data['order_id'] = $this->addOrder($order_data);]]></search>
+          <add position="after" offset="1"><![CDATA[
+            $this->load->model('extension/module/packing4D');
+            $this->model_extension_module_packing4D->addPackedOrder($order_id ?? $this->session->data['order_id']);
+          ]]></add>
+        </operation>
+    </file>
+    
+    
+    <file path="admin/controller/sale/order.php">
+		<operation>
+			<search index="1"><![CDATA[$data['shipping_method'] = $order_info['shipping_method'];]]></search>
+			<add position="before"><![CDATA[
+			$this->load->model('extension/module/packing4D');
+            $order_packing_data = $this->model_extension_module_packing4D->getPacking($order_id);
+
+            if ($order_packing_data) {
+                $data['packing_data'] = json_decode($order_packing_data['packing_data'], true);
+            }
+			]]></add>
+        </operation>
+    </file>
+    
+    <file path="admin/view/template/sale/order_info.twig">
+			<operation>
+			<search><![CDATA[<li><a href="#tab-additional" data-toggle="tab">{{ tab_additional }}</a></li>]]></search>
+			<add position="before"><![CDATA[{% if packing_data %}<li><a href="#tab-packing" data-toggle="tab">Packing data</a></li>{% endif %}]]></add>
+		</operation>		
+		<operation>
+			<search><![CDATA[<div class="tab-pane" id="tab-additional">]]></search>
+			<add position="before"><![CDATA[
+          <div class="tab-pane" id="tab-packing">
+            {% if packing_data %}
+            <h4>Packing data</h4>
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                <tr>
+                  <td>Box</td>
+                  <td>Items</td>
+                </tr>
+                </thead>
+                <tbody>
+                {% for pack in packing_data %}
+                  {% if  (pack|keys)|length > 0 %}
+                    {% set box = pack.box %}
+                    {% set items = pack.items %}
+                    <tr>
+                      <td>Name: {{ box.reference }}
+                        <br>
+                        L x W x H: {{ box.innerLength }} x {{ box.innerWidth }} x {{ box.innerDepth }}</td>
+                      <td>
+                        {% for item in items %}
+                          name: {{ item.description }}
+                          L x W x H: {{ item.length }} x {{ item.width }} x {{ item.depth }}
+                          <br>
+                        {% endfor %}
+                      </td>
+                    </tr>
+                  {% else %}
+                    Boxes prices: {{ pack }}
+                  {% endif %}
+                {% endfor %}
+                </tbody>
+              </table>
+              </div>
+              {% endif %}
+            </div>
+        ]]></add>
+        </operation>
+	</file>
+</modification>

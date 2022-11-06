@@ -1,0 +1,26 @@
+<div class="table-responsive">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <td class="text-left">{{ column_order_id }}</td>
+        <td class="text-left">{{ column_customer }}</td>
+        <td class="text-left">{{ column_tracking_nr }}</td>
+        <td class="text-left">{{ entry_weight }}</td>
+      </tr>
+    </thead>
+    <tbody>
+      {% if order_omniva_id %}
+      <tr>
+        <td class="text-left">{{ order_id }}</td>
+        <td class="text-left">{% if customer %} <a href="{{ customer }}" target="_blank">{{ firstname }} {{ lastname }}</a> {% else %} {{ firstname }} {{ lastname }}{% endif %}</td>
+        <td class="text-left">{{ tracking_nr }}</td>
+        <td class="text-left">{{ omniva_weight }}</td>
+      </tr>
+      {% else %}
+      <tr>
+        <td class="text-center" colspan="4">{{ text_no_results }}</td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
